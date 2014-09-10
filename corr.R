@@ -15,7 +15,7 @@ corr <- function(directory, threshold = 0) {
             }
         })
 	  
-        tt <- round(do.call(cbind, dataset),digits=5)
+        tt <- round(do.call(cbind, dataset),digits=6)
 		    #tt <- do.call(rbind,dataset)
         #print(tt)
         as.numeric(tt)
