@@ -1,4 +1,6 @@
 *.iml
 .idea
+.RData
+.Rhistory
 .DS_Store
 target
