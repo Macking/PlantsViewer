@@ -16,12 +16,19 @@ rankhospital <- function(state, outcome, num = "best") {
     if(outcome == "heart attack") {
         keeps <- c("Hospital.Name","Hospital.30.Day.Death..Mortality..Rates.from.Heart.Attack")
         attack <- data[keeps]
-        colnames(attack) <- c("Hospital.Name","Rate")
+        #colnames(attack) <- c("Hospital.Name","Rate")
         attack[,2] <- as.numeric(attack[,2])
         if(!is.na(as.numeric(num))) {
             number <- as.numeric(num)
             if(number > nrow(attack)) {
                 return(vector('numeric'))
+            } else {
+                attackState <- attack[order(attack[,2]),]
+                
+                result <- attackState[1:num,]
+                resultMerge <- cbind(result,c(1:num))
+                colnames(resultMerge) <- c("Hospital.Name","Rate","Rank")
+                resultMerge
             }
         }
         
