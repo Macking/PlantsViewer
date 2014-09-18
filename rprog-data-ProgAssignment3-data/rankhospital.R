@@ -16,48 +16,77 @@ rankhospital <- function(state, outcome, num = "best") {
     if(outcome == "heart attack") {
         keeps <- c("Hospital.Name","Hospital.30.Day.Death..Mortality..Rates.from.Heart.Attack")
         attack <- data[keeps]
-        #colnames(attack) <- c("Hospital.Name","Rate")
-        attack[,2] <- as.numeric(attack[,2])
+        attackState <- subset(attack,Hospital.30.Day.Death..Mortality..Rates.from.Heart.Attack!= "Not Available")
+        attackState[,2] <- as.numeric(attackState[,2])
+        colnames(attackState) <- c("Hospital.Name","Rate")
         if(!is.na(as.numeric(num))) {
             number <- as.numeric(num)
-            if(number > nrow(attack)) {
-                return(vector('numeric'))
+            if(number > nrow(attackState)) {
+                return(c(NA))
             } else {
-                attackState <- attack[order(attack[,2]),]
-                
-                result <- attackState[1:num,]
-                resultMerge <- cbind(result,c(1:num))
-                colnames(resultMerge) <- c("Hospital.Name","Rate","Rank")
-                resultMerge
+                attackList <- with(attackState,order(attackState$Rate,attackState$Hospital.Name))
+                OK <- attackState[attackList,]
+                return(OK[num,1])
             }
+        } else if(num == "best") {
+            attackList <- with(attackState,order(attackState$Rate,attackState$Hospital.Name))
+            OK <- attackState[attackList,]
+            return(OK[1,1])
+        } else if(num == "worst") {
+            attackList <- with(attackState,order(attackState$Rate,attackState$Hospital.Name))
+            OK <- attackState[attackList,]
+            return(OK[nrow(OK),1])
         }
-        
-        
-        attackState <- subset(attack,Hospital.30.Day.Death..Mortality..Rates.from.Heart.Attack!= "Not Available")
-        attackState[,3] <- as.numeric(attackState[,3])
-        attackState <- attackState[order(attackState[,3]),]
-        min <- attackState[1,3]
-        reduceTab <- subset(attackState, Hospital.30.Day.Death..Mortality..Rates.from.Heart.Attack == min)
     } else if(outcome == "heart failure") {
-        keeps <- c("Hospital.Name","State","Hospital.30.Day.Death..Mortality..Rates.from.Heart.Failure")
+        keeps <- c("Hospital.Name","Hospital.30.Day.Death..Mortality..Rates.from.Heart.Failure")
         attack <- data[keeps]
         attackState <- subset(attack,Hospital.30.Day.Death..Mortality..Rates.from.Heart.Failure!= "Not Available")
-        attackState[,3] <- as.numeric(attackState[,3])
-        attackState <- attackState[order(attackState[,3]),]
-        min <- attackState[1,3]
-        reduceTab <- subset(attackState, Hospital.30.Day.Death..Mortality..Rates.from.Heart.Failure == min)
+        attackState[,2] <- as.numeric(attackState[,2])
+        colnames(attackState) <- c("Hospital.Name","Rate")
+        if(!is.na(as.numeric(num))) {
+            number <- as.numeric(num)
+            if(number > nrow(attackState)) {
+                return(c(NA))
+            } else {
+                attackList <- with(attackState,order(attackState$Rate,attackState$Hospital.Name))
+                OK <- attackState[attackList,]
+                return(OK[num,1])
+            }
+        } else if(num == "best") {
+            attackList <- with(attackState,order(attackState$Rate,attackState$Hospital.Name))
+            OK <- attackState[attackList,]
+            return(OK[1,1])
+        } else if(num == "worst") {
+            attackList <- with(attackState,order(attackState$Rate,attackState$Hospital.Name))
+            OK <- attackState[attackList,]
+            return(OK[nrow(OK),1])
+        }
     } else if(outcome == "pneumonia") {
-        keeps <- c("Hospital.Name","State","Hospital.30.Day.Death..Mortality..Rates.from.Pneumonia")
+        keeps <- c("Hospital.Name","Hospital.30.Day.Death..Mortality..Rates.from.Pneumonia")
         attack <- data[keeps]
+        #colnames(attack) <- c("Hospital.Name","Rate")
         attackState <- subset(attack,Hospital.30.Day.Death..Mortality..Rates.from.Pneumonia!= "Not Available")
-        attackState[,3] <- as.numeric(attackState[,3])
-        attackState <- attackState[order(attackState[,3]),]
-        min <- attackState[1,3]
-        reduceTab <- subset(attackState, Hospital.30.Day.Death..Mortality..Rates.from.Pneumonia <= min)
+        attackState[,2] <- as.numeric(attackState[,2])
+        colnames(attackState) <- c("Hospital.Name","Rate")
+        if(!is.na(as.numeric(num))) {
+            number <- as.numeric(num)
+            if(number > nrow(attackState)) {
+                return(c(NA))
+            } else {
+                attackList <- with(attackState,order(attackState$Rate,attackState$Hospital.Name))
+                OK <- attackState[attackList,]
+                return(OK[num,1])
+            }
+        } else if(num == "best") {
+            attackList <- with(attackState,order(attackState$Rate,attackState$Hospital.Name))
+            OK <- attackState[attackList,]
+            return(OK[1,1])
+        } else if(num == "worst") {
+            attackList <- with(attackState,order(attackState$Rate,attackState$Hospital.Name))
+            OK <- attackState[attackList,]
+            return(OK[nrow(OK),1])
+        }
     }
-    rightLine <- reduceTab[order(reduceTab[,2]),]
-    hospital <- rightLine[1,1]
-    hospital
     ## Return hospital name in that state with the given rank
     ## 30-day death rate
 }
